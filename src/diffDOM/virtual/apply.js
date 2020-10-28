@@ -54,13 +54,13 @@ function applyVirtualDiff(
                 node.attributes = {}
             }
 
-            node.attributes[diff[options._const.name]] = diff[options._const.value]
+        if (diff[options._const.value] === true) {
+            node[diff[options._const.name]] = true;
+            node.attributes[diff[options._const.name]] = true;
+        } else
+            node.attributes[diff[options._const.name]] = diff[options._const.value];
 
-            if (diff[options._const.name] === 'checked') {
-                node.checked = true
-            } else if (diff[options._const.name] === 'selected') {
-                node.selected = true
-            } else if (node.nodeName === 'INPUT' && diff[options._const.name] === 'value') {
+        if (diff[options._const.name] === 'value') {
                 node.value = diff[options._const.value]
             }
 
@@ -113,6 +113,7 @@ function applyVirtualDiff(
             if (node.subsets) {
                 node.subsets.forEach(map => {
                     if (diff[options._const.from] < diff[options._const.to] && map.oldValue <= diff[options._const.to] && map.oldValue > diff[options._const.from]) {
+
                         map.oldValue -= diff.groupLength
                         const splitLength = map.oldValue + map.length - diff[options._const.to]
                         if (splitLength > 0) {

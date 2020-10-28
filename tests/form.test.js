@@ -1,7 +1,7 @@
 import {
-    DiffDOM
+    DiffDOM, nodeToObj
 } from "../src/index"
-
+import { Diff } from "../src/diffDOM/virtual/helpers.js"
 
 // Add all divs to be compared here two by two
 const html = `
@@ -13,7 +13,7 @@ const html = `
   <input id="e4" type="text">
 
   <input id="e5" type="radio" name="radioset1">
-  <input id="e6" type="radio" name="radioset1" checked="checked">
+  <input id="e6" type="radio" name="radioset1" checked>
 
   <input id="e7" type="radio" name="radioset2">
   <input id="e8" type="radio" name="radioset2">
@@ -26,7 +26,7 @@ const html = `
 
   <select>
       <option id="e13">Option 1</option>
-      <option id="e14" selected="selected">Option 2</option>
+      <option id="e14" selected>Option 2</option>
   </select>
 
   <select>
@@ -52,11 +52,11 @@ describe('form', () => {
         second.removeAttribute('id')
 
         const diff1 = dd.diff(first, second)
-        expect(diff1).toHaveLength(1)
+        expect(diff1).toHaveLength(2)
 
         first.value = 'Some changed text'
         const diff2 = dd.diff(first, second)
-        expect(diff2).toHaveLength(1)
+        expect(diff2).toHaveLength(2)
 
         const third = second.cloneNode(true)
         const diff3 = dd.diff(second, third)
@@ -67,7 +67,7 @@ describe('form', () => {
         expect(diff4).toHaveLength(1)
 
         const diff5 = dd.diff(first, second)
-        expect(diff5).toHaveLength(1)
+        expect(diff5).toHaveLength(2)
 
         second.innerText = 'Some text'
         const diff6 = dd.diff(first, second)
@@ -85,11 +85,11 @@ describe('form', () => {
         second.removeAttribute('id')
 
         const diff1 = dd.diff(first, second)
-        expect(diff1).toHaveLength(1)
+        expect(diff1).toStrictEqual([new Diff({action:"removeAttribute",name:"value",route:[],value:"textinput"}),new Diff({action:"modifyValue",newValue:"",oldValue:"textinput",route:[]})]);
 
         first.value = 'textinput changed'
         const diff2 = dd.diff(first, second)
-        expect(diff2).toHaveLength(1)
+        expect(diff2).toStrictEqual([new Diff({action:"removeAttribute",name:"value",route:[],value:"textinput"}),new Diff({action:"modifyValue",newValue:"",oldValue:"textinput changed",route:[]})]);
 
         second.value = 'new textinput'
         const diff3 = dd.diff(first, second)
@@ -98,7 +98,7 @@ describe('form', () => {
         first.value = 'textinput'
         second.value = 'textinput'
         const diff4 = dd.diff(first, second)
-        expect(diff4).toHaveLength(2)
+        expect(diff4).toHaveLength(1)
     })
 
     it('can diff input type = radio', () => {
@@ -112,11 +112,12 @@ describe('form', () => {
         fourth.removeAttribute('id')
 
         const diff1 = dd.diff(first, second)
-        expect(diff1).toHaveLength(1)
+        expect(diff1).toStrictEqual([new Diff({action: "addAttribute", name:"checked",route:[],value:true})]);
+
 
         first.checked = true
         const diff2 = dd.diff(first, second)
-        expect(diff2).toHaveLength(2)
+        expect(diff2).toStrictEqual([new Diff({action:"removeAttribute",name:"checked",route:[],value:true})])
 
         const diff3 = dd.diff(first, third)
         expect(diff3).toHaveLength(2)
@@ -126,7 +127,7 @@ describe('form', () => {
         expect(diff4).toHaveLength(1)
 
         const diff5 = dd.diff(second, fourth)
-        expect(diff5).toHaveLength(2)
+        expect(diff5).toHaveLength(1)
 
     })
 
@@ -145,7 +146,7 @@ describe('form', () => {
 
         first.checked = true
         const diff2 = dd.diff(first, second)
-        expect(diff2).toHaveLength(1)
+        expect(diff2).toHaveLength(0)
 
         const diff3 = dd.diff(first, third)
         expect(diff3).toHaveLength(2)
@@ -169,18 +170,18 @@ describe('form', () => {
         fourth.removeAttribute('id')
 
         const diff1 = dd.diff(first, second)
-        expect(diff1).toHaveLength(2)
+        expect(diff1).toStrictEqual([new Diff({action:"addAttribute",name:"selected",route:[],value:true}),new Diff({action:"modifyTextElement",newValue:"Option 2",oldValue:"Option 1",route:[0]}),new Diff({action:"modifyValue",newValue:"Option 2",oldValue:"Option 1",route:[]})])
 
-        first.selected = true
+        first.selected = true // second is no longer selected (eventhough it has the selected attribute)
         const diff2 = dd.diff(first, second)
         expect(diff2).toHaveLength(3)
 
         const diff3 = dd.diff(first, third)
-        expect(diff3).toHaveLength(1)
+        expect(diff3).toHaveLength(2)
 
         fourth.selected = true // makes selection disappear from three
         const diff4 = dd.diff(first, third)
-        expect(diff4).toHaveLength(2)
+        expect(diff4).toHaveLength(3)
 
         const diff5 = dd.diff(second, fourth)
         expect(diff5).toHaveLength(3)

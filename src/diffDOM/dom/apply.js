@@ -41,6 +41,10 @@ export function applyDiff(
             if (!node || !node.setAttribute) {
                 return false
             }
+        if (diff[options._const.value] === true) {
+            node[diff[options._const.name]] = true;
+            node.setAttribute(diff[options._const.name], "")
+        } else
             node.setAttribute(diff[options._const.name], diff[options._const.value])
             break
         case options._const.modifyAttribute:
@@ -56,6 +60,8 @@ export function applyDiff(
             if (!node || !node.removeAttribute) {
                 return false
             }
+        if (diff[options._const.value] === true)
+            node[diff[options._const.name]] = false;
             node.removeAttribute(diff[options._const.name])
             break
         case options._const.modifyTextElement:

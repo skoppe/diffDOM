@@ -42,8 +42,8 @@ function parseTag(tag) {
 
     let tagMatch = tag.match(/<\/?([^\s]+?)[/\s>]/)
     if (tagMatch) {
-        res.nodeName = tagMatch[1].toUpperCase()
-        if (lookup[tagMatch[1].toLowerCase()] || tag.charAt(tag.length - 2) === '/') {
+        res.nodeName = tagMatch[1].toLowerCase()
+        if (lookup[tagMatch[1]] || tag.charAt(tag.length - 2) === '/') {
             res.voidElement = true
         }
 
@@ -61,19 +61,22 @@ function parseTag(tag) {
     let result = null
     let done = false
     while (!done) {
-        result = reg.exec(tag)
+        result = reg.exec(tag);
 
         if (result === null) {
-            done = true
+            done = true;
         } else if (result[0].trim()) {
             if (result[1]) {
-                let attr = result[1].trim()
-                let arr = [attr, ""]
-
-                if (attr.indexOf("=") > -1) arr = attr.split("=")
-
-                res.attributes[arr[0]] = arr[1]
-                reg.lastIndex--
+                let attr = result[1].trim();
+                let index = attr.indexOf("=");
+                if (index === -1) {
+                    res.attributes[attr] = true;
+                } else {
+                    let key = attr.slice(0, index);
+                    let value = attr.slice(index + 1);
+                    res.attributes[key] = value;
+                    reg.lastIndex--;
+                }
             } else if (result[2]) res.attributes[result[2]] = result[3].trim().substring(1, result[3].length - 1)
         }
     }

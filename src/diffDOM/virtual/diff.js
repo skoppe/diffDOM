@@ -91,7 +91,7 @@ export class DiffFinder {
             }
         }
 
-        if (this.options.valueDiffing && !t1.valueDone) {
+        if (!t1.valueDone) {
             // value differences?
             diffs = this.findValueDiff(t1, t2, route)
 
@@ -171,13 +171,16 @@ export class DiffFinder {
                 )
             } else {
                 attr2.splice(pos, 1)
-                if (t1.attributes[attr] !== t2.attributes[attr]) {
+                let left = t1.attributes[attr], right = t2.attributes[attr] || true;
+                if (left === "")
+                    left = t1[attr] === false ? false : true;
+                if (left !== right) {
                     diffs.push(new Diff()
                         .setValue(this.options._const.action, this.options._const.modifyAttribute)
                         .setValue(this.options._const.route, route)
                         .setValue(this.options._const.name, attr)
-                        .setValue(this.options._const.oldValue, t1.attributes[attr])
-                        .setValue(this.options._const.newValue, t2.attributes[attr])
+                        .setValue(this.options._const.oldValue, left)
+                        .setValue(this.options._const.newValue, right)
                     )
                 }
             }
@@ -441,14 +444,14 @@ export class DiffFinder {
         // of filled out forms, etc.
         const diffs = []
 
-        if (t1.selected !== t2.selected) {
-            diffs.push(new Diff()
-                .setValue(this.options._const.action, this.options._const.modifySelected)
-                .setValue(this.options._const.oldValue, t1.selected)
-                .setValue(this.options._const.newValue, t2.selected)
-                .setValue(this.options._const.route, route)
-            )
-        }
+        // if (t1.selected !== t2.selected) {
+        //     diffs.push(new Diff()
+        //         .setValue(this.options._const.action, this.options._const.modifySelected)
+        //         .setValue(this.options._const.oldValue, t1.selected)
+        //         .setValue(this.options._const.newValue, t2.selected)
+        //         .setValue(this.options._const.route, route)
+        //     )
+        // }
 
         if ((t1.value || t2.value) && t1.value !== t2.value && t1.nodeName !== 'OPTION') {
             diffs.push(new Diff()
@@ -458,14 +461,15 @@ export class DiffFinder {
                 .setValue(this.options._const.route, route)
             )
         }
-        if (t1.checked !== t2.checked) {
-            diffs.push(new Diff()
-                .setValue(this.options._const.action, this.options._const.modifyChecked)
-                .setValue(this.options._const.oldValue, t1.checked)
-                .setValue(this.options._const.newValue, t2.checked)
-                .setValue(this.options._const.route, route)
-            )
-        }
+        // if (t1.checked !== t2.checked) {
+        //     console.log("checked diff ", t1.checked, t2.checked);
+        //     diffs.push(new Diff()
+        //         .setValue(this.options._const.action, this.options._const.modifyChecked)
+        //         .setValue(this.options._const.oldValue, t1.checked)
+        //         .setValue(this.options._const.newValue, t2.checked)
+        //         .setValue(this.options._const.route, route)
+        //     )
+        // }
 
         return diffs
     }
