@@ -19,7 +19,8 @@ export function applyDiff(
         diff,
         options // {preDiffApply, postDiffApply, textDiff, valueDiffing, _const}
     ) {
-    let node = getFromRoute(tree, diff[options._const.route])
+    let _const = options._const;
+    let node = getFromRoute(tree, diff[_const.route])
     let newNode
     let reference
     let route
@@ -36,109 +37,109 @@ export function applyDiff(
         return true
     }
 
-    switch (diff[options._const.action]) {
-        case options._const.addAttribute:
+    switch (diff[_const.action]) {
+        case _const.addAttribute:
             if (!node || !node.setAttribute) {
                 return false
             }
-        if (diff[options._const.value] === true) {
-            node[diff[options._const.name]] = true;
-            node.setAttribute(diff[options._const.name], "")
+        if (diff[_const.value] === true) {
+            node[diff[_const.name]] = true;
+            node.setAttribute(diff[_const.name], "")
         } else
-            node.setAttribute(diff[options._const.name], diff[options._const.value])
+            node.setAttribute(diff[_const.name], diff[_const.value])
             break
-        case options._const.modifyAttribute:
+        case _const.modifyAttribute:
             if (!node || !node.setAttribute) {
                 return false
             }
-            node.setAttribute(diff[options._const.name], diff[options._const.newValue])
-            if (node.nodeName === 'INPUT' && diff[options._const.name] === 'value') {
-                node.value = diff[options._const.newValue]
+            node.setAttribute(diff[_const.name], diff[_const.newValue])
+            if (node.nodeName === 'INPUT' && diff[_const.name] === 'value') {
+                node.value = diff[_const.newValue]
             }
             break
-        case options._const.removeAttribute:
+        case _const.removeAttribute:
             if (!node || !node.removeAttribute) {
                 return false
             }
-        if (diff[options._const.value] === true)
-            node[diff[options._const.name]] = false;
-            node.removeAttribute(diff[options._const.name])
+        if (diff[_const.value] === true)
+            node[diff[_const.name]] = false;
+            node.removeAttribute(diff[_const.name])
             break
-        case options._const.modifyTextElement:
+        case _const.modifyTextElement:
             if (!node || node.nodeType !== 3) {
                 return false
             }
-            options.textDiff(node, node.data, diff[options._const.oldValue], diff[options._const.newValue])
+            options.textDiff(node, node.data, diff[_const.oldValue], diff[_const.newValue])
             break
-        case options._const.modifyValue:
+        case _const.modifyValue:
             if (!node || typeof node.value === 'undefined') {
                 return false
             }
-            node.value = diff[options._const.newValue]
+            node.value = diff[_const.newValue]
             break
-        case options._const.modifyComment:
+        case _const.modifyComment:
             if (!node || typeof node.data === 'undefined') {
                 return false
             }
-            options.textDiff(node, node.data, diff[options._const.oldValue], diff[options._const.newValue])
+            options.textDiff(node, node.data, diff[_const.oldValue], diff[_const.newValue])
             break
-        case options._const.modifyChecked:
+        case _const.modifyChecked:
             if (!node || typeof node.checked === 'undefined') {
                 return false
             }
-            node.checked = diff[options._const.newValue]
+            node.checked = diff[_const.newValue]
             break
-        case options._const.modifySelected:
+        case _const.modifySelected:
             if (!node || typeof node.selected === 'undefined') {
                 return false
             }
-            node.selected = diff[options._const.newValue]
+            node.selected = diff[_const.newValue]
             break
-        case options._const.replaceElement:
+        case _const.replaceElement:
             node.parentNode.replaceChild(
                 objToNode(
-                    diff[options._const.newValue],
+                    diff[_const.newValue],
                     node.namespaceURI === 'http://www.w3.org/2000/svg',
                     options
                 ),
                 node
             )
             break
-        case options._const.relocateGroup:
-            nodeArray = Array(...new Array(diff.groupLength)).map(() => node.removeChild(node.childNodes[diff[options._const.from]]))
+        case _const.relocateGroup:
+            nodeArray = Array(...new Array(diff.groupLength)).map(() => node.removeChild(node.childNodes[diff[_const.from]]))
             nodeArray.forEach((childNode, index) => {
                 if (index === 0) {
-                    reference = node.childNodes[diff[options._const.to]]
+                    reference = node.childNodes[diff[_const.to]]
                 }
                 node.insertBefore(childNode, reference || null)
             })
             break
-        case options._const.removeElement:
+        case _const.removeElement:
             node.parentNode.removeChild(node)
             break
-        case options._const.addElement:
-            route = diff[options._const.route].slice()
+        case _const.addElement:
+            route = diff[_const.route].slice()
             c = route.splice(route.length - 1, 1)[0]
             node = getFromRoute(tree, route)
             node.insertBefore(
                 objToNode(
-                    diff[options._const.element],
+                    diff[_const.element],
                     node.namespaceURI === 'http://www.w3.org/2000/svg',
                     options
                 ),
                 node.childNodes[c] || null
             )
             break
-        case options._const.removeTextElement:
+        case _const.removeTextElement:
             if (!node || node.nodeType !== 3) {
                 return false
             }
             node.parentNode.removeChild(node)
             break
-        case options._const.addTextElement:
-            route = diff[options._const.route].slice()
+        case _const.addTextElement:
+            route = diff[_const.route].slice()
             c = route.splice(route.length - 1, 1)[0]
-            newNode = options.document.createTextNode(diff[options._const.value])
+            newNode = options.document.createTextNode(diff[_const.value])
             node = getFromRoute(tree, route)
             if (!node || !node.childNodes) {
                 return false

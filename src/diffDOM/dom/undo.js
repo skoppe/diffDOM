@@ -13,62 +13,63 @@ function undoDiff(
     diff,
     options // {preDiffApply, postDiffApply, textDiff, valueDiffing, _const}
 ) {
+    let _const = options._const;
 
-    switch (diff[options._const.action]) {
-        case options._const.addAttribute:
-            diff[options._const.action] = options._const.removeAttribute
+    switch (diff[_const.action]) {
+        case _const.addAttribute:
+            diff[_const.action] = _const.removeAttribute
             applyDiff(tree, diff, options)
             break
-        case options._const.modifyAttribute:
-            swap(diff, options._const.oldValue, options._const.newValue)
+        case _const.modifyAttribute:
+            swap(diff, _const.oldValue, _const.newValue)
             applyDiff(tree, diff, options)
             break
-        case options._const.removeAttribute:
-            diff[options._const.action] = options._const.addAttribute
+        case _const.removeAttribute:
+            diff[_const.action] = _const.addAttribute
             applyDiff(tree, diff, options)
             break
-        case options._const.modifyTextElement:
-            swap(diff, options._const.oldValue, options._const.newValue)
+        case _const.modifyTextElement:
+            swap(diff, _const.oldValue, _const.newValue)
             applyDiff(tree, diff, options)
             break
-        case options._const.modifyValue:
-            swap(diff, options._const.oldValue, options._const.newValue)
+        case _const.modifyValue:
+            swap(diff, _const.oldValue, _const.newValue)
             applyDiff(tree, diff, options)
             break
-        case options._const.modifyComment:
-            swap(diff, options._const.oldValue, options._const.newValue)
+        case _const.modifyComment:
+            swap(diff, _const.oldValue, _const.newValue)
             applyDiff(tree, diff, options)
             break
-        case options._const.modifyChecked:
-            swap(diff, options._const.oldValue, options._const.newValue)
+        case _const.modifyChecked:
+            swap(diff, _const.oldValue, _const.newValue)
             applyDiff(tree, diff, options)
             break
-        case options._const.modifySelected:
-            swap(diff, options._const.oldValue, options._const.newValue)
+        case _const.modifySelected:
+            swap(diff, _const.oldValue, _const.newValue)
             applyDiff(tree, diff, options)
             break
-        case options._const.replaceElement:
-            swap(diff, options._const.oldValue, options._const.newValue)
+        case _const.replaceElement:
+            swap(diff, _const.oldValue, _const.newValue)
             applyDiff(tree, diff, options)
             break
-        case options._const.relocateGroup:
-            swap(diff, options._const.from, options._const.to)
+        case _const.relocateGroup:
+            swap(diff, _const.from, _const.to)
             applyDiff(tree, diff, options)
             break
-        case options._const.removeElement:
-            diff[options._const.action] = options._const.addElement
+        case _const.removeElement:
+            diff[_const.action] = _const.addElement
             applyDiff(tree, diff, options)
             break
-        case options._const.addElement:
-            diff[options._const.action] = options._const.removeElement
+        case _const.addElement:
+            diff[_const.action] = _const.removeElement
             applyDiff(tree, diff, options)
             break
-        case options._const.removeTextElement:
-            diff[options._const.action] = options._const.addTextElement
+        case _const.removeTextElement:
+            diff[_const.action] = _const.addTextElement
             applyDiff(tree, diff, options)
             break
-        case options._const.addTextElement:
-            diff[options._const.action] = options._const.removeTextElement
+        case _const.addTextElement:
+            diff[_const.action] = _const.removeTextElement
             applyDiff(tree, diff, options)
             break
         default:

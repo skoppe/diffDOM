@@ -14,23 +14,23 @@ const dd = new DiffDOM({
 describe('diff obj', () => {
 
     it('add checked', () => {
-        expect(dd.diff(stringToObj("<input>"),stringToObj("<input checked>"))).toStrictEqual([new Diff({action: "addAttribute", name: "checked", route: [], value: true})]);
+        expect(dd.diff(stringToObj("<input>"),stringToObj("<input checked>"))).toStrictEqual([({action: "addAttribute", name: "checked", route: [], value: true})]);
     });
 
     it('remove checked', () => {
-        expect(dd.diff(stringToObj("<input checked>"),stringToObj("<input>"))).toStrictEqual([new Diff({action: "removeAttribute", name: "checked", route: [], value: true})]);
+        expect(dd.diff(stringToObj("<input checked>"),stringToObj("<input>"))).toStrictEqual([({action: "removeAttribute", name: "checked", route: [], value: true})]);
     });
 
     it('select option', () => {
-        expect(dd.diff(stringToObj("<select><option><option></select>"),stringToObj("<select><option>A<option></select>"))).toStrictEqual([new Diff({action: "addTextElement", route: [0,0], value: "A"})]);
+        expect(dd.diff(stringToObj("<select><option><option></select>"),stringToObj("<select><option>A<option></select>"))).toStrictEqual([({action: "addTextElement", route: [0,0], value: "A"})]);
     });
 
     it('add unknown boolean attr', () => {
-        expect(dd.diff(stringToObj("<node>"),stringToObj("<node stuff>"))).toStrictEqual([new Diff({action: "addAttribute", route: [], value: true, name: "stuff"})]);
+        expect(dd.diff(stringToObj("<node>"),stringToObj("<node stuff>"))).toStrictEqual([({action: "addAttribute", route: [], value: true, name: "stuff"})]);
     });
 
     it('remove unknown boolean attr', () => {
-        expect(dd.diff(stringToObj("<node stuff>"),stringToObj("<node>"))).toStrictEqual([new Diff({action: "removeAttribute", route: [], value: true, name: "stuff"})]);
+        expect(dd.diff(stringToObj("<node stuff>"),stringToObj("<node>"))).toStrictEqual([({action: "removeAttribute", route: [], value: true, name: "stuff"})]);
     });
 
 });
@@ -41,15 +41,15 @@ describe('diff obj stringToNode', () => {
         return objToNode(stringToObj(s), false, {document: document});
     }
     it('add checked', () => {
-        expect(dd.diff(stringToNode("<input>"),stringToNode("<input checked>"))).toStrictEqual([new Diff({action: "addAttribute", name: "checked", route: [], value: true})]);
+        expect(dd.diff(stringToNode("<input>"),stringToNode("<input checked>"))).toStrictEqual([({action: "addAttribute", name: "checked", route: [], value: true})]);
     });
 
     it('remove checked', () => {
-        expect(dd.diff(stringToNode("<input checked>"),stringToNode("<input>"))).toStrictEqual([new Diff({action: "removeAttribute", name: "checked", route: [], value: true})]);
+        expect(dd.diff(stringToNode("<input checked>"),stringToNode("<input>"))).toStrictEqual([({action: "removeAttribute", name: "checked", route: [], value: true})]);
     });
 
     it('select option add text', () => {
-        expect(dd.diff(stringToNode("<select><option><option></select>"),stringToNode("<select><option>A<option></select>"))).toStrictEqual([new Diff({action: "addTextElement", route: [0,0], value: "A"}),new Diff({action: "modifyValue", newValue: "A", oldValue: "", route: []}), new Diff({action: "modifyValue", newValue: "A", oldValue: "", "route": [0]})]);
+        expect(dd.diff(stringToNode("<select><option><option></select>"),stringToNode("<select><option>A<option></select>"))).toStrictEqual([({action: "addTextElement", route: [0,0], value: "A"}),({action: "modifyValue", newValue: "A", oldValue: "", route: []}), ({action: "modifyValue", newValue: "A", oldValue: "", "route": [0]})]);
     });
 
     it('diff unknown boolean attribute', () => {
@@ -61,7 +61,7 @@ describe('diff obj stringToNode', () => {
     it('divergent attribute', () => {
         let input = stringToNode("<input>");
         input.checked = true;
-        expect(dd.diff(input, "<input>")).toStrictEqual([new Diff({action: "removeAttribute",name:"checked",route:[],value:true})]);
+        expect(dd.diff(input, "<input>")).toStrictEqual([({action: "removeAttribute",name:"checked",route:[],value:true})]);
     });
 
     it('divergent attribute 2', () => {

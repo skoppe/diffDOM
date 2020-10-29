@@ -85,11 +85,11 @@ describe('form', () => {
         second.removeAttribute('id')
 
         const diff1 = dd.diff(first, second)
-        expect(diff1).toStrictEqual([new Diff({action:"removeAttribute",name:"value",route:[],value:"textinput"}),new Diff({action:"modifyValue",newValue:"",oldValue:"textinput",route:[]})]);
+        expect(diff1).toStrictEqual([({action:"removeAttribute",name:"value",route:[],value:"textinput"}),({action:"modifyValue",newValue:"",oldValue:"textinput",route:[]})]);
 
         first.value = 'textinput changed'
         const diff2 = dd.diff(first, second)
-        expect(diff2).toStrictEqual([new Diff({action:"removeAttribute",name:"value",route:[],value:"textinput"}),new Diff({action:"modifyValue",newValue:"",oldValue:"textinput changed",route:[]})]);
+        expect(diff2).toStrictEqual([({action:"removeAttribute",name:"value",route:[],value:"textinput"}),({action:"modifyValue",newValue:"",oldValue:"textinput changed",route:[]})]);
 
         second.value = 'new textinput'
         const diff3 = dd.diff(first, second)
@@ -112,12 +112,12 @@ describe('form', () => {
         fourth.removeAttribute('id')
 
         const diff1 = dd.diff(first, second)
-        expect(diff1).toStrictEqual([new Diff({action: "addAttribute", name:"checked",route:[],value:true})]);
+        expect(diff1).toStrictEqual([({action: "addAttribute", name:"checked",route:[],value:true})]);
 
 
         first.checked = true
         const diff2 = dd.diff(first, second)
-        expect(diff2).toStrictEqual([new Diff({action:"removeAttribute",name:"checked",route:[],value:true})])
+        expect(diff2).toStrictEqual([({action:"removeAttribute",name:"checked",route:[],value:true})])
 
         const diff3 = dd.diff(first, third)
         expect(diff3).toHaveLength(2)
@@ -170,7 +170,7 @@ describe('form', () => {
         fourth.removeAttribute('id')
 
         const diff1 = dd.diff(first, second)
-        expect(diff1).toStrictEqual([new Diff({action:"addAttribute",name:"selected",route:[],value:true}),new Diff({action:"modifyTextElement",newValue:"Option 2",oldValue:"Option 1",route:[0]}),new Diff({action:"modifyValue",newValue:"Option 2",oldValue:"Option 1",route:[]})])
+        expect(diff1).toStrictEqual([({action:"addAttribute",name:"selected",route:[],value:true}),({action:"modifyTextElement",newValue:"Option 2",oldValue:"Option 1",route:[0]}),({action:"modifyValue",newValue:"Option 2",oldValue:"Option 1",route:[]})])
 
         first.selected = true // second is no longer selected (eventhough it has the selected attribute)
         const diff2 = dd.diff(first, second)
