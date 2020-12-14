@@ -69,4 +69,14 @@ describe('diff obj stringToNode', () => {
         input.checked = false;
         expect(dd.diff(input, "<input>")).toStrictEqual([]);
     });
+
+    it('radios checked', () => {
+        let input = stringToNode("<form><input type=\"radio\" value=\"A\"><input type=\"radio\" value=\"B\"></form>");
+        expect(dd.diff(input, "<form><input type=\"radio\" value=\"A\"><input type=\"radio\" value=\"B\" checked></form>")).toStrictEqual([{action: "addAttribute", name: "checked", route: [1], value: true}]);
+    });
+
+    it('radios checked 2', () => {
+        let input = stringToNode("<form><input type=\"radio\" value=\"A\"><input type=\"radio\" value=\"B\"></form>");
+        expect(dd.diff(input, "<form><input type=\"radio\" value=\"A\" checked><input type=\"radio\" value=\"B\"></form>")).toStrictEqual([{action: "addAttribute", name: "checked", route: [0], value: true}]);
+    });
 });

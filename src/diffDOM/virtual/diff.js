@@ -479,12 +479,14 @@ export class DiffFinder {
         // of filled out forms, etc.
         const diffs = []
         let _c = this.options._const;
+        let v1 = t1.value || t1.attributes && t1.attributes.value;
+        let v2 = t2.value || t2.attributes && t2.attributes.value;
 
-        if ((t1.value || t2.value) && t1.value !== t2.value && t1.nodeName !== 'OPTION') {
+        if ((v1 || v2) && v1 !== v2 && t1.nodeName !== 'OPTION') {
             diffs.push({
                 [_c.action]: _c.modifyValue,
-                [_c.oldValue]: t1.value || "",
-                [_c.newValue]: t2.value || "",
+                [_c.oldValue]: v1 || "",
+                [_c.newValue]: v2 || "",
                 [_c.route]: route,
             })
         }
