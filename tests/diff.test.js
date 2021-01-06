@@ -79,4 +79,10 @@ describe('diff obj stringToNode', () => {
         let input = stringToNode("<form><input type=\"radio\" value=\"A\"><input type=\"radio\" value=\"B\"></form>");
         expect(dd.diff(input, "<form><input type=\"radio\" value=\"A\" checked><input type=\"radio\" value=\"B\"></form>")).toStrictEqual([{action: "addAttribute", name: "checked", route: [0], value: true}]);
     });
+
+    it('diff values with qoutes correctly', () => {
+        let input = stringToObj("<input value=''>");
+        expect(dd.diff(input, `<input value="don\\\"t">`)).toStrictEqual([{action: "modifyAttribute", name: "value", route: [], oldValue: true, newValue: `don"t`}]);
+        expect(dd.diff(input, `<input value='don\\\'t'>`)).toStrictEqual([{action: "modifyAttribute", name: "value", route: [], oldValue: true, newValue: `don't`}]);
+    });
 });

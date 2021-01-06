@@ -1,9 +1,9 @@
 // from html-parse-stringify (MIT)
 
-const tagRE = /<(?:"[^"]*"['"]*|'[^']*'['"]*|[^'">])+>/g
+const tagRE = /<(?:"(?:\\"|[^"])*"['"]*|'(?:\\'|[^'])*'['"]*|[^'">])+>/g;
 // re-used obj for quick lookups of components
-const empty = Object.create ? Object.create(null) : {}
-const attrRE = /\s([^'"/\s><]+?)[\s/>]|([^\s=]+)=\s?(".*?"|'.*?')/g
+const empty = Object.create ? Object.create(null) : {};
+const attrRE = /\s([^'"/\s><]+?)[\s/>]|([^\s=]+)=\s?("(?:\\"|.)*?"|'(?:\\'|.)*?')/g;
 
 
 function unescape(string) {
@@ -74,10 +74,12 @@ function parseTag(tag) {
                 } else {
                     let key = attr.slice(0, index);
                     let value = attr.slice(index + 1);
-                    res.attributes[key] = value;
+                    res.attributes[key] = value.replace(`\\"`,'"').replace(`\\'`,"'")
                     reg.lastIndex--;
                 }
-            } else if (result[2]) res.attributes[result[2]] = result[3].trim().substring(1, result[3].length - 1)
+            } else if (result[2]) {
+                res.attributes[result[2]] = result[3].trim().substring(1, result[3].length - 1).replace(`\\"`,'"').replace(`\\'`,"'")
+            }
         }
     }
 
